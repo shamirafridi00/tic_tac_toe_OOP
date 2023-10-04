@@ -51,10 +51,10 @@ class Board
 end
 
 
-dd = Board.new
-puts dd.display
-dd.update_cell(1, 'X')
-dd.update_cell(2, 'X')
-dd.update_cell(3, 'X')
-puts dd.display
-puts dd.check_win?('X')
+# dd = Board.new
+# puts dd.display
+# dd.update_cell(1, 'X')
+# dd.update_cell(2, 'X')
+# dd.update_cell(3, 'X')
+# puts dd.display
+# puts dd.check_win?('X')
