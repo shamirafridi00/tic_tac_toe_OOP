@@ -1,54 +1,60 @@
-# board.rb
 class Board
   def initialize
-    @grid = Array.new(3) { Array.new(3, ' ') }
+    @cells = Array.new(9, ' ')  # [" ", " ", " ", " ", " ", " ", " ", " ", " "]
   end
 
   def display
-    puts "  0 1 2"
-    @grid.each_with_index do |row, i|
-      print "#{i} "
-      puts row.join('|')
-      puts "  -----" unless i == 2
+    puts " #{@cells[0]} | #{@cells[1]} | #{@cells[2]} "
+    puts '-----------'
+    puts " #{@cells[3]} | #{@cells[4]} | #{@cells[5]} "
+    puts '-----------'
+    puts " #{@cells[6]} | #{@cells[7]} | #{@cells[8]} "
+    puts '-----------'
+  end
+
+  def update_cell(position, symbol)
+    if valid_position?(position)
+      @cells[position - 1] = symbol
+      display
+    end
+
+  end
+
+  def valid_position?(position)
+    position.between?(1,9) && @cells[position - 1] == ' '
+  end
+
+  def current_state
+    @cells.dup  # Return a duplicate of the @cells array to avoid modifying the original
+  end
+
+  def check_win?(symbol)
+    WINNING_COMBINATIONS.any? do |combination|
+      combination.all? { |position| @cells[position - 1] == symbol}
     end
   end
 
-  def place_symbol(row, col, symbol)
-    if valid_move?(row, col) && @grid[row][col] == ' '
-      @grid[row][col] = symbol
-      true
-    else
-      false
-    end
+  def check_draw?
+    @cells.none? {|cell| cell == ' '}
   end
 
-  def valid_move?(row, col)
-    row.between?(0, 2) && col.between?(0, 2)
-  end
-
-  def full?
-    @grid.all? { |row| row.none?(' ') }
-  end
-
-  def win?(symbol)
-    # Check rows, columns, and diagonals for a win
-    win_by_rows?(symbol) || win_by_columns?(symbol) || win_by_diagonals?(symbol)
-  end
 
   private
+  WINNING_COMBINATIONS = [
+    [1, 2, 3], [4, 5, 6], [7, 8, 9],  # rows
+    [1, 4, 7], [2, 5, 8], [3, 6, 9],  # columns
+    [1, 5, 9], [3, 5, 7] # diagonals
+  ]
 
-  def win_by_rows?(symbol)
-    @grid.any? { |row| row.all?(symbol) }
-  end
 
-  def win_by_columns?(symbol)
-    @grid.transpose.any? { |col| col.all?(symbol) }
-  end
-
-  def win_by_diagonals?(symbol)
-    left_diagonal = (0..2).map { |i| @grid[i][i] }
-    right_diagonal = (0..2).map { |i| @grid[i][2 - i] }
-    left_diagonal.all?(symbol) || right_diagonal.all?(symbol)
-  end
 
 end
+
+
+dd = Board.new
+puts dd.display
+dd.update_cell(1, 'X')
+dd.update_cell(2, 'X')
+dd.update_cell(3, 'X')
+puts dd.display
+puts dd.check_win?('X')
